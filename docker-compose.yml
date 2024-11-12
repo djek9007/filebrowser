@@ -1,25 +1,15 @@
-version: "3"
-
+version: '3.3'
 services:
   filebrowser:
-    image: hurlenko/filebrowser
     container_name: filebrowser
-    user: "${UID}:${GID}"
+    image: filebrowser/filebrowser:s6
     ports:
-      - "${PORT}:8080"
-    volumes:
-      - "./data:/data"
-      - "./config:/config"
+      - 9090:80
     environment:
-      FB_BASEURL: "/filebrowser"
-      VIRTUAL_HOST: ${SSL_DOMAIN}
-      VIRTUAL_PORT: ${PORT}
-      LETSENCRYPT_HOST: ${SSL_DOMAIN}
+      - PUID=0
+      - PGID=0
+    volumes:
+      - /:/srv
+      - /root/projects/filebrowser/database/filebrowser.db:/config/filebrowser.db
     restart: always
-    networks:
-      - https
 
-networks:
-  https:
-    external:
-      name: ${HTTPS_NETWORK}
